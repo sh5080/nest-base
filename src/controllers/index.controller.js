@@ -5,6 +5,7 @@ import BannerController from './banner.controller.js';
 import NoticeController from './notice.controller.js';
 import SupportController from './support.controller.js';
 import EmotionController from './emotion.controller.js';
+import DiagnosisController from './diagnosis.controller.js'
 
 export {
   UserController,
@@ -14,4 +15,5 @@ export {
   NoticeController,
   SupportController,
   EmotionController,
+  DiagnosisController
 };

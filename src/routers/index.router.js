@@ -6,6 +6,7 @@ import BannerRouter from './banner.router.js';
 import NoticeRouter from './notice.router.js';
 import SupportRouter from './support.router.js';
 import EmotionRouter from './emotion.router.js';
+import DiagnosisRouter from './diagnosis.router.js'
 import express from 'express';
 const app = express();
 
@@ -17,6 +18,8 @@ app.use('/banner', BannerRouter);
 app.use('/notice', NoticeRouter);
 app.use('/support', SupportRouter);
 app.use('/emotion', EmotionRouter);
+
+app.use('/diagnosis',DiagnosisRouter)
 
 // * 404 에러처리
 app.use((req, res) => {
