@@ -1,11 +1,12 @@
-import UserController from './user.controller.js';
-import TermController from './term.controller.js';
-import VersionController from './version.controller.js';
-import BannerController from './banner.controller.js';
-import NoticeController from './notice.controller.js';
-import SupportController from './support.controller.js';
-import EmotionController from './emotion.controller.js';
-import DiagnosisController from './diagnosis.controller.js'
+import UserController from "./user.controller.js";
+import TermController from "./term.controller.js";
+import VersionController from "./version.controller.js";
+import BannerController from "./banner.controller.js";
+import NoticeController from "./notice.controller.js";
+import SupportController from "./support.controller.js";
+import EmotionController from "./emotion.controller.js";
+import DiagnosisController from "./diagnosis.controller.js";
+import MemoController from "./memo.controller.js";
 
 export {
   UserController,
@@ -15,5 +16,6 @@ export {
   NoticeController,
   SupportController,
   EmotionController,
-  DiagnosisController
+  DiagnosisController,
+  MemoController,
 };

@@ -6,6 +6,7 @@ import NoticeService from "./notice.service.js";
 import SupportService from "./support.service.js";
 import EmotionService from "./emotion.service.js";
 import DiagnosisService from "./diagnosis.service.js";
+import MemoService from "./memo.service.js";
 export {
   UserService,
   TermService,
@@ -15,4 +16,5 @@ export {
   SupportService,
   EmotionService,
   DiagnosisService,
+  MemoService,
 };

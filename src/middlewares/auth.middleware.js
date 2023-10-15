@@ -1,10 +1,11 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
-import { isSuccess, statusCode, message } from '../utils/http.util.js';
-import jwt from 'jsonwebtoken';
+import { isSuccess, statusCode, message } from "../utils/http.util.js";
+import jwt from "jsonwebtoken";
 
 const authCheck = async (req, res, next) => {
-  const token = req.headers.authorization;
+  let token = req.headers.authorization;
+  token = req.headers.authorization.slice(7);
   if (!token) {
     return res
       .status(statusCode.FORBIDDEN)
@@ -17,7 +18,7 @@ const authCheck = async (req, res, next) => {
     return next();
   } catch (error) {
     next(error);
-    if (error.message === 'jwt expired') {
+    if (error.message === "jwt expired") {
       return res
         .status(statusCode.UNAUTHORIZED)
         .json(isSuccess.fail(statusCode.UNAUTHORIZED, message.UNAUTHORIZED));

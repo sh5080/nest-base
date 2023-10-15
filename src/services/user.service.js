@@ -1,10 +1,10 @@
-import 'dotenv/config';
-import Logger from '../configs/logger.config.js';
-import { statusCode, message } from '../utils/http.util.js';
-import tokenPublish from '../utils/auth.util.js';
-import { QueryTypes } from 'sequelize';
-import sequelize from '../configs/sequelize.config.js';
-import { v4 } from 'uuid';
+import "dotenv/config";
+import Logger from "../configs/logger.config.js";
+import { statusCode, message } from "../utils/http.util.js";
+import tokenPublish from "../utils/auth.util.js";
+import { QueryTypes } from "sequelize";
+import sequelize from "../configs/sequelize.config.js";
+import { v4 } from "uuid";
 
 const returnResponse = {
   status: statusCode.OK,
@@ -26,17 +26,17 @@ const isUser = async (email) => {
     if (user.length == 0) {
       returnResponse.status = 401;
       returnResponse.success = false;
-      returnResponse.message = 'User signup possible';
+      returnResponse.message = "User signup possible";
       return returnResponse;
     } else {
       returnResponse.status = 200;
       returnResponse.success = true;
-      returnResponse.message = 'User already exist';
+      returnResponse.message = "User already exist";
       returnResponse.data = {
-        email: user[0]['email'],
-        auth_type: user[0]['auth_type'],
-        created_at: user[0]['created_at'],
-        uuid: user[0]['uuid'],
+        email: user[0]["email"],
+        auth_type: user[0]["auth_type"],
+        created_at: user[0]["created_at"],
+        uuid: user[0]["uuid"],
       };
       return returnResponse;
     }
@@ -88,7 +88,7 @@ const signUp = async (
 ) => {
   try {
     const uuid = () => {
-      const uuidToken = v4().split('-');
+      const uuidToken = v4().split("-");
       // DB 인덱싱 순서 보장 체계를 위한 인덱싱 수정
       // 1-2-3-4-5의 구조를 32145로 변경
       return (
@@ -110,25 +110,25 @@ const signUp = async (
       const user = await sequelize.query(userQuery, {
         type: QueryTypes.SELECT,
       });
-      const auth_token = await tokenPublish(user[0]['id'], uuid());
+      const auth_token = await tokenPublish(user[0]["id"], uuid());
       for (const element of terms) {
         const term = `
           INSERT INTO TermAgree(is_agree, user_id, term_id)
-          VALUES (${element['is_agree']}, ${user[0]['id']}, ${element['id']})
+          VALUES (${element["is_agree"]}, ${user[0]["id"]}, ${element["id"]})
         `;
         await sequelize.query(term);
       }
       returnResponse.status = 201;
       returnResponse.success = true;
-      returnResponse.message = 'Signup success';
+      returnResponse.message = "Signup success";
       returnResponse.data = {
         auth_token: auth_token,
-        uuid: user[0]['uuid'],
+        uuid: user[0]["uuid"],
       };
       return returnResponse;
     } catch (error) {
       Logger.error(error);
-      if (error.name === 'SequelizeUniqueConstraintError') {
+      if (error.name === "SequelizeUniqueConstraintError") {
         returnResponse.status = statusCode.BAD_REQUEST;
         returnResponse.success = false;
         returnResponse.message = message.UNIQUE_CONSTRAINT_ERROR;
@@ -153,21 +153,32 @@ const signIn = async (uuid, email) => {
       WHERE uuid = '${uuid}' AND email = '${email}'
     `;
     const user = await sequelize.query(query, { type: QueryTypes.SELECT });
+    // const signIn = async (uuid, email) => {
+    //   try {
+    //     const query = `
+    //       SELECT id, uuid
+    //       FROM User
+    //       WHERE uuid = :uuid AND email = :email
+    //     `;
+    // const user = await sequelize.query(query, {
+    //   replacements: { uuid, email },
+    //   type: QueryTypes.SELECT,
+    // });
     if (user.length == 0) {
       returnResponse.status = 400;
       returnResponse.success = false;
-      returnResponse.message = 'User not found';
+      returnResponse.message = "User not found";
       return returnResponse;
     } else {
-      const auth_token = await tokenPublish(user[0]['id'], user[0]['uuid']);
+      const auth_token = await tokenPublish(user[0]["id"], user[0]["uuid"]);
       const logQuery = `
         INSERT INTO UserLoginLog(user_id)
-        VALUES (${user[0]['id']})
+        VALUES (${user[0]["id"]})
       `;
       await sequelize.query(logQuery);
       returnResponse.status = 200;
       returnResponse.success = true;
-      returnResponse.message = 'Login success';
+      returnResponse.message = "Login success";
       returnResponse.data = { auth_token };
       return returnResponse;
     }
@@ -184,7 +195,7 @@ const updateUserInfo = async (user_id, updateDto) => {
       const key = keys[element];
       const typeOf = typeof updateDto[key];
       let value =
-        typeOf === 'boolean'
+        typeOf === "boolean"
           ? `SET ${key} = ${updateDto[key]} WHERE id=${user_id};`
           : `SET ${key} = '${updateDto[key]}' WHERE id=${user_id};`;
       const query = `

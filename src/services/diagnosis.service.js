@@ -2,7 +2,7 @@ import "dotenv/config";
 import Logger from "../configs/logger.config.js";
 import sequelize from "../configs/sequelize.config.js";
 import { statusCode, message, isSuccess } from "../utils/http.util.js";
-import { QueryTypes, Sequelize } from "sequelize";
+import { QueryTypes } from "sequelize";
 
 const createQuestion = async (title, diagnosis_id) => {
   try {
@@ -23,7 +23,6 @@ const createQuestion = async (title, diagnosis_id) => {
     if (!validDiagnosisIdValues.includes(diagnosis_id)) {
       returnResponse.status = 401;
       returnResponse.success = false;
-      //   throw new Error("diagnosis_id is not found");
       returnResponse.message = "diagnosis_id is not found";
       return returnResponse;
     }
@@ -37,7 +36,6 @@ const createQuestion = async (title, diagnosis_id) => {
     );
 
     if (duplicateTitles.length > 0 && duplicateTitles[0].title === title) {
-      //   throw new Error("title already exist");
       returnResponse.status = 401;
       returnResponse.success = false;
       returnResponse.message = "title already exist";
@@ -68,7 +66,7 @@ const createQuestion = async (title, diagnosis_id) => {
     return returnResponse;
   } catch (error) {
     Logger.error(error);
-    throw new Error("Unexpected Error");
+    console.error(error);
   }
 };
 
@@ -114,7 +112,7 @@ const createAnswer = async (answer, question_id, score) => {
     return returnResponse;
   } catch (error) {
     Logger.error(error);
-    throw new Error("Unexpected Error");
+    console.error(error);
   }
 };
 
@@ -181,7 +179,7 @@ const createUserDiagnosis = async (
     if (error.name === "SequelizeForeignKeyConstraintError") {
       throw new Error("data mismatch");
     }
-    throw new Error("Unexpected Error");
+    console.error(error);
   }
 };
 
@@ -197,7 +195,7 @@ const getDiagnosisList = async () => {
     return diagnosisListData;
   } catch (error) {
     Logger.error(error);
-    throw new Error("Unexpected Error");
+    console.error(error);
   }
 };
 
@@ -281,7 +279,7 @@ const getOneDiagnosisById = async (id) => {
     return structuredData;
   } catch (error) {
     Logger.error(error);
-    throw new Error("Unexpected Error");
+    console.error(error);
   }
 };
 const getCurrentUserDiagnosisList = async (user_id) => {
@@ -336,7 +334,7 @@ const getCurrentUserDiagnosisList = async (user_id) => {
     return returnResponse;
   } catch (error) {
     Logger.error(error);
-    throw new Error("Unexpected Error");
+    console.error(error);
   }
 };
 
@@ -369,7 +367,7 @@ const getCurrentUserDiagnosisListCount = async (user_id) => {
     return returnResponse;
   } catch (error) {
     Logger.error(error);
-    throw new Error("Unexpected Error");
+    console.error(error);
   }
 };
 
