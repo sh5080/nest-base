@@ -12,4 +12,8 @@ export const validationSchema = Joi.object({
   REFRESH_JWT_SECRET: Joi.string().required(),
   ACCESS_JWT_EXPIRATION: Joi.string().required(),
   REFRESH_JWT_EXPIRATION: Joi.string().required(),
+  ACCESS_JWT_TOKEN: Joi.string().required(),
+  REFRESH_JWT_TOKEN: Joi.string().required(),
+  JWT_AUDIENCE: Joi.string().required(),
+  JWT_ISSUER: Joi.string().required(),
 });

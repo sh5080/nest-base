@@ -12,4 +12,8 @@ export const authConfig = registerAs('auth', () => ({
   REFRESH_JWT_SECRET: process.env.REFRESH_JWT_SECRET,
   ACCESS_JWT_EXPIRATION: parseInt(process.env.ACCESS_JWT_EXPIRATION, 10),
   REFRESH_JWT_EXPIRATION: parseInt(process.env.REFRESH_JWT_EXPIRATION, 10),
+  ACCESS_JWT_TOKEN: process.env.ACCESS_JWT_TOKEN,
+  REFRESH_JWT_TOKEN: process.env.REFRESH_JWT_TOKEN,
+  JWT_AUDIENCE: process.env.JWT_AUDIENCE,
+  JWT_ISSUER: process.env.JWT_ISSUER,
 }));

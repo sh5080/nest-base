@@ -14,16 +14,19 @@ datasource db {
 /////////////////////////// Model: User  //////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 model User {
-  id           Int       @id @default(autoincrement()) @db.Int
-  uuid         String    @unique
+  id           BigInt @id @default(autoincrement())
   nickname     String    @db.VarChar(20)
-  email        String
+  email        String    @unique
   gender       Boolean
   phone_number String    @unique @db.VarChar(11)
-  birthday     Int?      @db.Int
-  role         Int //0: user 1: admin ...etc
-  created_at   DateTime?
-  updated_at   DateTime?
+  birthDate    String     
+
+  grade              Int                   @default(0)
+  role               Int                   @default(0)
+  valid              Boolean               @default(true)
+
+  created_at   DateTime  @default(now())
+  updated_at   DateTime? @updatedAt
   deleted_at   DateTime?
 
   tokens User_token[]
@@ -39,7 +42,7 @@ model User_token {
   refresh_count Int
   user_agent    String
   user          User     @relation(fields: [user_id], references: [id])
-  user_id       Int      @unique
+  user_id       BigInt      @unique
   valid         Boolean
   created_at    DateTime @db.Date
   updated_at    DateTime @db.Date

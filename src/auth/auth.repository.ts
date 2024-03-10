@@ -4,13 +4,13 @@ import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class AuthRepository {
   constructor(private readonly prismaService: PrismaService) {}
-  async getUserByPhone(phone: string, uuid: string) {
+  async getUserByPhone(phone: string) {
     const userData = await this.prismaService.user.findUnique({
-      where: { phone_number: phone, uuid },
+      where: { phone_number: phone },
     });
     return userData;
   }
-  async getUserByUserId(userId: number) {
+  async getUserByUserId(userId: bigint) {
     const userData = await this.prismaService.user.findUnique({
       where: { id: userId },
     });
@@ -24,7 +24,7 @@ export class AuthRepository {
   }
 
   async upsertSession(
-    userId: number,
+    userId: bigint,
     refreshToken: string,
     ip: string,
     userAgent: string,

@@ -20,13 +20,13 @@ export class AuthService {
     try {
       const userData = await this.authRepository.getUserByPhone(
         userLoginDto.mobileNumber,
-        userLoginDto.uuid,
       );
       if (!userData) {
         throw new NotFoundException('해당 유저는 존재하지 않습니다.');
       }
       const tokenData = await this.createTokens(
         userData.id,
+        userData.grade,
         userData.role,
         ip,
         userAgent,
@@ -38,26 +38,34 @@ export class AuthService {
   }
 
   async createTokens(
-    userId: number,
+    userId: bigint,
+    grade: number,
     role: number,
     ip: string,
     userAgent: string,
   ) {
     try {
-      let accessTokenPayload: { userId: string; role?: number };
+      let accessTokenPayload: { userId: string; grade: string; role?: string };
       // jwt파싱해도 role확인되지 않도록 일반유저는 role 넣지 않음
-      if (role === 0) {
-        accessTokenPayload = { userId: userId.toString() };
-      } else if (role === 1) {
-        accessTokenPayload = { userId: userId.toString(), role };
+      if (role > 0) {
+        accessTokenPayload = {
+          userId: userId.toString(),
+          grade: grade.toString(),
+          role: role.toString(),
+        };
+      } else {
+        accessTokenPayload = {
+          userId: userId.toString(),
+          grade: grade.toString(),
+        };
       }
       const accessToken = jwt.sign(
         accessTokenPayload,
         authConfig().ACCESS_JWT_SECRET,
         {
           expiresIn: authConfig().ACCESS_JWT_EXPIRATION,
-          audience: 'neurocircuit',
-          issuer: 'test',
+          audience: authConfig().JWT_AUDIENCE,
+          issuer: authConfig().JWT_ISSUER,
         },
       );
       const refreshTokenPayload = { uuid: uuidv4() };
@@ -66,8 +74,8 @@ export class AuthService {
         authConfig().REFRESH_JWT_SECRET,
         {
           expiresIn: authConfig().REFRESH_JWT_EXPIRATION,
-          audience: 'neurocircuit',
-          issuer: 'test',
+          audience: authConfig().JWT_AUDIENCE,
+          issuer: authConfig().JWT_ISSUER,
         },
       );
       await this.authRepository.upsertSession(
@@ -82,7 +90,7 @@ export class AuthService {
       throw err;
     }
   }
-  async updateTokens(userId: number, ip: string, userAgent: string) {
+  async updateTokens(userId: bigint, ip: string, userAgent: string) {
     try {
       const userData = await this.authRepository.getUserByUserId(userId);
       if (!userData) {
@@ -90,10 +98,17 @@ export class AuthService {
       }
       let accessTokenPayload;
       // jwt파싱해도 role확인되지 않도록 일반유저는 role 넣지 않음
-      if (userData.role === 0) {
-        accessTokenPayload = { userId: userId.toString() };
-      } else if (userData.role === 1) {
-        accessTokenPayload = { userId: userId.toString(), role: userData.role };
+      if (userData.role > 0) {
+        accessTokenPayload = {
+          userId: userId.toString(),
+          grade: userData.grade.toString(),
+          role: userData.role.toString(),
+        };
+      } else {
+        accessTokenPayload = {
+          userId: userId.toString(),
+          grade: userData.grade.toString(),
+        };
       }
       const newAccessToken = jwt.sign(
         accessTokenPayload,
@@ -140,11 +155,11 @@ export class AuthService {
         const payload = jwt.verify(token, secret, {
           algorithms: ['HS256'],
         }) as jwt.JwtPayload & User;
-        const { userId, role } = payload;
+        const { userId, role, grade } = payload;
         if (!role) {
-          return { userId };
+          return { userId, grade };
         }
-        return { userId, role };
+        return { userId, grade, role };
       }
     } catch (err) {
       console.error(err);

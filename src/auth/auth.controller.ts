@@ -12,7 +12,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { successCode } from '../middlewares/error.middleware';
 import { AuthService } from '../auth/auth.service';
-import { AuthRequest } from '../type/request.type';
+import { AuthRequest } from '../types/request.type';
 import { authConfig } from 'src/config/env.config';
 import { UserLoginDto } from './dto/auth.dto';
 import { AuthGuard } from './auth.guard';
